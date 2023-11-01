@@ -30,7 +30,7 @@ def webhook(subpath):
 if __name__ == '__main__':
   env = {
       "RELAY_HOST": "0.0.0.0",
-      "RELAY_PORT": "8000"
+      "RELAY_PORT": "50000"
   }
 
   app.run(host=os.environ['RELAY_HOST'], port=os.environ['RELAY_PORT'])

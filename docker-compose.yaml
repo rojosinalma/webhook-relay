@@ -9,3 +9,12 @@ services:
       - RELAY_HOST=0.0.0.0
       - RELAY_PORT=50000
       - RELAY_DST_URL=http://localhost:50001
+
+  webhook-relay-test:
+    container_name: webhook_relay_test
+    image: ghcr.io/rojosinalma/webhook-relay:main
+    command: gunicorn -w 1 -b 0.0.0.0:5001 dst_api_test:app
+    networks:
+      - common
+    ports:
+      - '50001:50001'
