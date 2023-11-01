@@ -14,7 +14,5 @@ services:
     container_name: webhook_relay_test
     image: ghcr.io/rojosinalma/webhook-relay:main
     command: gunicorn -w 1 -b 0.0.0.0:5001 dst_api_test:app
-    networks:
-      - common
     ports:
       - '50001:50001'
