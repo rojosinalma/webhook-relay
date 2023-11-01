@@ -1,0 +1,11 @@
+version: "3"
+services:
+  webhook-relay:
+    container_name: webhook_relay
+    image: ghcr.io/rojosinalma/webhook-relay:main
+    ports:
+      - '50000:50000'
+    environment:
+      - RELAY_HOST=0.0.0.0
+      - RELAY_PORT=50000
+      - RELAY_DST_URL=https://172.17.0.1:9443
