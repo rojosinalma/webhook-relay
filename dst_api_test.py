@@ -3,8 +3,9 @@ import ipdb
 
 app = Flask(__name__)
 
-@app.route('/<path:any>', methods=['POST'])
-def webhook(any):
+@app.route('/', defaults={'path': ''}, methods=['POST'])
+@app.route('/<path:path>', methods=['POST'])
+def webhook(path):
   return jsonify(success=True), 200
 
 if __name__ == '__main__':
