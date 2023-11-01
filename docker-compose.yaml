@@ -2,17 +2,17 @@ version: "3"
 services:
   webhook-relay:
     container_name: webhook_relay
-    image: ghcr.io/rojosinalma/webhook-relay:main
+    build: .
     ports:
       - '50000:50000'
     environment:
       - RELAY_HOST=0.0.0.0
       - RELAY_PORT=50000
-      - RELAY_DST_URL=http://172.17.0.1:50001
+      - RELAY_DST_URL=http://webhook-relay-test:50001
 
   webhook-relay-test:
     container_name: webhook_relay_test
-    image: ghcr.io/rojosinalma/webhook-relay:main
-    command: gunicorn -w 1 -b 0.0.0.0:50001 dst_api_test:app
+    build: .
+    command: gunicorn --access-logfile - -w 1 -b 0.0.0.0:50001 dst_api_test:app
     ports:
       - '50001:50001'
