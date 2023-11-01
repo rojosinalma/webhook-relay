@@ -16,6 +16,8 @@ def async_request(url):
     res.raise_for_status()  # Raise an exception if the request was not successful (status code >= 400)
   except requests.exceptions.RequestException as e:
     logging.error(f"Failed to make a request to {url}: {e}")
+  except Exception as e:
+      logging.error(f"An error occurred in async_request: {e}")
 
 @app.route('/webhooks/<path:subpath>', methods=['POST'])
 def webhook(subpath):
@@ -29,9 +31,7 @@ def webhook(subpath):
   return jsonify(success=True), 200
 
 if __name__ == '__main__':
-  env = {
-      "RELAY_HOST": "0.0.0.0",
-      "RELAY_PORT": "50000"
-  }
-
-  app.run(host=os.environ['RELAY_HOST'], port=os.environ['RELAY_PORT'])
+  try:
+    app.run(host=os.environ.get("RELAY_HOST", "0.0.0.0"), port=os.environ.get("RELAY_PORT", 50000))
+  except Exception as e:
+    logging.error(f"An error occurred in the main thread: {e}")
