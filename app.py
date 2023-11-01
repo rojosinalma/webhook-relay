@@ -3,16 +3,19 @@ from dotenv import load_dotenv
 import os
 import threading
 import requests
-
-import ipdb # Dev debugger
+import logging
 
 load_dotenv()
+logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 
 def async_request(url):
-  # This is the function that will run in a separate thread
-  requests.post(url)
+  try:
+    res = requests.post(url)
+    res.raise_for_status()  # Raise an exception if the request was not successful (status code >= 400)
+  except requests.exceptions.RequestException as e:
+    logging.error(f"Failed to make a request to {url}: {e}")
 
 @app.route('/webhooks/<path:subpath>', methods=['POST'])
 def webhook(subpath):
@@ -22,8 +25,6 @@ def webhook(subpath):
 
   thread  = threading.Thread(target=async_request, args=(url,))
   thread.start()
-  # ipdb.set_trace()
-  # requests.post(url)
 
   return jsonify(success=True), 200
 
