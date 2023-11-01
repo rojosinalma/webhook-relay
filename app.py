@@ -12,14 +12,13 @@ logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
 
 def async_request(url, headers, data):
-  # Errors in thread need to be tried separately because they don't propagate to the main stack
   try:
-    res = requests.post(url, headers=headers, json=data)
+    res = requests.post(url, headers=headers, json=data, verify=False)
     res.raise_for_status()  # Raise an exception if the request was not successful (status code >= 400)
   except requests.exceptions.RequestException as e:
-    logging.error(f"Failed to make a request to {url}: {e}") # Catch request errors separately
+    logging.error(f"Failed to make a request to {url}: {e}")
   except Exception as e:
-    logging.error(f"An error occurred in async_request: {e}") # Catch any other errors
+    logging.error(f"An error occurred in async_request: {e}")
 
 @app.route('/webhooks/<path:subpath>', methods=['POST'])
 def webhook(subpath):
