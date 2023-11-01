@@ -8,7 +8,7 @@ Simple python flask app to relay webhooks calls asynchronously to backend servic
 
 ## Usage
 
-The app receives requests at the path `/webhooks`, anything received in this path will be relayed asynchronously to the  `RELAY_DST_URL`, the original requested will get a `200` response without waiting for the destination to respond.
+The app receives requests at the path `/webhooks`, anything received in this path will be relayed asynchronously to the  `RELAY_DST_URL`, the original requester will get a `200` response without waiting for the destination to respond.
 
 Any path that comes after `/webhooks` will also be relayed to the destination URl, without the `/webhooks` part. The same is true for any json payload that gets sent in the original request, it will be relayed untouched to the destination URL.
 
