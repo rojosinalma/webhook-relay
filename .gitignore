@@ -1,0 +1,28 @@
+# Byte-compiled / optimized Python files
+__pycache__/
+*.pyc
+*.pyo
+
+# Editor and IDE files
+.vscode/
+.idea/
+
+# Local development configuration
+instance/
+
+# Compiled Python files
+*.pyc
+
+# Environment variables file (created by python-dotenv)
+.env
+
+# Log files
+logs/
+*.log
+
+# Cache files
+__pycache__/
+
+# Temporary files
+*.swp
+*~
