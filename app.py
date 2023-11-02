@@ -31,6 +31,9 @@ def webhook(subpath):
     url     = f"{dst_url}/{subpath}"
     data    = '{}'
 
+    if not dst_url:
+      raise ValueError("RELAY_DST_URL environment variable is not set")
+
     if 'Content-Type' in headers:
       data = request.get_json() # We skip if there's no content type because otherwise flask complains
 
@@ -40,6 +43,7 @@ def webhook(subpath):
     return jsonify(success=True), 200
   except Exception as e:
     logging.error(f"An error occurred in the main thread: {e}")
+    return jsonify(success=False), 500
 
 if __name__ == '__main__':
   app.run(host=os.environ.get("RELAY_HOST", "0.0.0.0"), port=os.environ.get("RELAY_PORT", 50000))

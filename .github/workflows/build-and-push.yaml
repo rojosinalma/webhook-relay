@@ -2,9 +2,13 @@ name: Build and push Docker image
 run-name: Build and push to Github container registry
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - 'main'
+  workflow_run:
+    workflows: ["Test"]
+    types:
+      - completed
+  # push:
+  #   branches:
+  #     - 'main'
 
 env:
   REGISTRY: ghcr.io
