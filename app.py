@@ -9,6 +9,8 @@ import ipdb
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning) # Disable insecure request warnings
+
 app = Flask(__name__)
 
 def async_request(url, headers, data):
