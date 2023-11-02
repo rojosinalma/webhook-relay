@@ -4,7 +4,7 @@ import os
 import threading
 import requests
 import logging
-import ipdb
+import urllib3
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
@@ -39,7 +39,6 @@ def webhook(subpath):
 
     return jsonify(success=True), 200
   except Exception as e:
-    ipdb.set_trace()
     logging.error(f"An error occurred in the main thread: {e}")
 
 if __name__ == '__main__':
