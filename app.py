@@ -15,6 +15,7 @@ def async_request(url, headers, data):
   try:
     res = requests.post(url, headers=headers, json=data, verify=False)
     res.raise_for_status()  # Raise an exception if the request was not successful (status code >= 400)
+    logging.info(f"Successfully relayed request to {url}")
   except requests.exceptions.RequestException as e:
     logging.error(f"Failed to make a request to {url}: {e}")
   except Exception as e:
