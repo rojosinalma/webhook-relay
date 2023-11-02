@@ -10,7 +10,7 @@ Simple python flask app to relay webhooks calls asynchronously to backend servic
 
 The app receives requests at the path `/webhooks`, anything received in this path will be relayed asynchronously to the  `RELAY_DST_URL`, the original requester will get a `200` response without waiting for the destination to respond.
 
-Any path that comes after `/webhooks` will also be relayed to the destination URl, without the `/webhooks` part. The same is true for any json payload that gets sent in the original request, it will be relayed untouched to the destination URL.
+Any path that comes after `/webhooks` will also be relayed to the destination URl, without the `/webhooks` part. The same is true for the headers and any json payload that gets sent from the original request.
 
 **NOTE: The relay supports redirecting to just one destination URL, if you need to route to more destinations, it's recommended to setup multiple instances of the relay.**
 
@@ -34,14 +34,24 @@ docker build -t webhook-relay:latest -f Dockerfile .
 docker run -it webhook-relay:latest
 ```
 
+Or with `docker-compose`
+
+```bash
+docker-compose -f docker-compose.yaml build
+docker-compose -f docker-compose.yaml up -d
+```
+
+With this you can easily have the app and the api test running without more setup.
+
 ## Simulating an internal service
-There's also a simple webserver that receives requests on any path available with dst_api_test.py, to use it:
+There's also a simple app in `dst_api_test.py` that receives requests on any path available and responds with `200`, to use it:
 
 ```bash
 python dst_api_test.py
 ```
 
 This will give you a place to test the relay of webhooks, you can set the `RELAY_DST_URL` in your .env to localhost:50001. You can set a different port in the dst_api_test.py script.
+If you're using `docker-compose` this has already been configured.
 
 ## Development
 
