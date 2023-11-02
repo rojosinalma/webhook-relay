@@ -1,5 +1,5 @@
 name: Build and push Docker image
-run-name: Build and push to Github container registry
+
 on:
   workflow_dispatch:
   workflow_run:
