@@ -32,7 +32,7 @@ def webhook(subpath):
     data    = '{}'
 
     if 'Content-Type' in headers:
-      data = request.get_json() # We skip this because otherwise flask complains about not having a content type
+      data = request.get_json() # We skip if there's no content type because otherwise flask complains
 
     thread  = threading.Thread(target=async_request, args=(url, headers, data))
     thread.start()
