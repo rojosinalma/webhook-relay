@@ -39,5 +39,9 @@ class TestWebhook(TestCase):
     self.assertEqual(response.json, {'success': False})
     mock_log.assert_called_once_with('An error occurred in the main thread: Test exception')
 
+  def test_status_endpoint(self):
+    response = self.client.get('/status')
+    self.assertEqual(response.status_code, 200)
+
 if __name__ == '__main__':
     unittest.main()

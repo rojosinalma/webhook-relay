@@ -13,6 +13,6 @@ services:
   webhook-relay-test:
     container_name: webhook_relay_test
     build: .
-    command: gunicorn --access-logfile - -w 1 -b 0.0.0.0:50001 dst_api_test:app
+    command: gunicorn --access-logfile - -w 1 -b 0.0.0.0:50001 dst_api:app
     ports:
       - '50001:50001'

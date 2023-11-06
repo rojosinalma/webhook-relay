@@ -44,13 +44,13 @@ docker-compose -f docker-compose.yaml up -d
 With this you can easily have the app and the api test running without more setup.
 
 ## Simulating an internal service
-There's also a simple app in `dst_api_test.py` that receives requests on any path available and responds with `200`, to use it:
+There's also a simple app in `dst_api.py` that receives requests on any path available and responds with `200`, to use it:
 
 ```bash
-python dst_api_test.py
+python dst_api.py
 ```
 
-This will give you a place to test the relay of webhooks, you can set the `RELAY_DST_URL` in your .env to localhost:50001. You can set a different port in the dst_api_test.py script.
+This will give you a place to test the relay of webhooks, you can set the `RELAY_DST_URL` in your .env to localhost:50001. You can set a different port in the `dst_api.py` script.
 If you're using `docker-compose` this has already been configured.
 
 ## Development

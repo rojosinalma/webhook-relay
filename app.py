@@ -45,5 +45,9 @@ def webhook(subpath):
     logging.error(f"An error occurred in the main thread: {e}")
     return jsonify(success=False), 500
 
+@app.route('/status')
+def status():
+  return '', 200
+
 if __name__ == '__main__':
   app.run(host=os.environ.get("RELAY_HOST", "0.0.0.0"), port=os.environ.get("RELAY_PORT", 50000))
