@@ -3,7 +3,7 @@ FROM python:3.8
 
 WORKDIR /app
 
-COPY app.py gunicorn_config.py requirements.txt dst_api_test.py ./
+COPY app.py gunicorn_config.py requirements.txt dst_api.py ./
 
 # Install Python dependencies
 RUN pip install -r requirements.txt
