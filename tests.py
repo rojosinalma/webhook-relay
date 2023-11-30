@@ -16,7 +16,7 @@ class TestWebhook(TestCase):
     if 'RELAY_DST_URL' in os.environ:
       del os.environ['RELAY_DST_URL']
 
-    response = self.client.post('/webhooks/id/test')
+    response = self.client.post('/id/test')
     self.assertEqual(response.status_code, 500)
     self.assertEqual(response.json, {'success': False})
     mock_thread.assert_not_called()
@@ -25,7 +25,7 @@ class TestWebhook(TestCase):
   @patch('app.threading.Thread')
   def test_webhook_with_dst_url(self, mock_thread):
     os.environ['RELAY_DST_URL'] = 'http://localhost'
-    response = self.client.post('/webhooks/id/test')
+    response = self.client.post('/id/test')
     self.assertEqual(response.status_code, 200)
     self.assertEqual(response.json, {'success': True})
     mock_thread.assert_called_once()
@@ -35,7 +35,7 @@ class TestWebhook(TestCase):
   def test_webhook_exception(self, mock_log, mock_thread):
     os.environ['RELAY_DST_URL'] = 'http://localhost'
     mock_thread.side_effect = Exception('Test exception')
-    response = self.client.post('/webhooks/id/test')
+    response = self.client.post('/id/test')
     self.assertEqual(response.status_code, 500)
     self.assertEqual(response.json, {'success': False})
     mock_log.assert_called_once_with('An error occurred in the main thread: Test exception')

@@ -41,7 +41,7 @@ def async_request(relay_id, relay_url, headers, data):
   except Exception as e:
     logging.error(f"An error occurred in async_request: {e}")
 
-@app.route('/webhooks/<relay_id>/<path:subpath>', methods=['POST'])
+@app.route('/<relay_id>/<path:subpath>', methods=['POST'])
 def webhook(relay_id, subpath):
   try:
     dst_url   = os.environ.get("RELAY_DST_URL")
