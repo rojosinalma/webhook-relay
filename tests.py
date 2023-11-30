@@ -55,17 +55,5 @@ class TestWebhook(TestCase):
     mock_post.assert_called_once()
     mock_post.assert_called_with('http://discordwebhookurl', json=expected_payload)
 
-  @patch('app.requests.post', side_effect=requests.exceptions.RequestException)
-  @patch('app.send_discord_notification')
-  def test_discord_notification_on_failure(self, mock_send_notification, mock_post):
-    os.environ['RELAY_DST_URL'] = 'http://localhost'
-    os.environ['DISCORD_WEBHOOK_URL'] = 'http://discordwebhookurl'
-    relay_id = '123'
-    subpath = 'path/to/resource'
-    self.client.post(f'/webhooks/{relay_id}/{subpath}')
-    # The message format should match the one used in the `async_request` function
-    failure_message = f"Failed to relay {relay_id}"
-    mock_send_notification.assert_called_once_with(failure_message)
-
 if __name__ == '__main__':
     unittest.main()

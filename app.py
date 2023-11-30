@@ -22,7 +22,7 @@ def send_discord_notification(message):
     try:
       payload = { "content": message }
       requests.post(discord_webhook_url, json=payload)
-      logging.info("Discord notification sent successfully")
+      logging.info(f"Discord notification sent successfully: {message}")
     except requests.exceptions.RequestException as e:
       logging.error(f"Failed to send Discord notification: {e}")
 
