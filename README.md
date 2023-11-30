@@ -8,11 +8,9 @@ Simple python flask app to relay webhooks calls asynchronously to backend servic
 
 ## Usage
 
-The app receives requests at the path `/<relay_id>/<anything_else>`, anything received in this path will be relayed asynchronously to the `RELAY_DST_URL` appending `<anything_else>` as the path, the original requester will get a `200` response without waiting for the destination to respond.
+The app receives requests at the path `/<relay_id>/<anything_else>`and relays asynchronously to `RELAY_DST_URL` appending `<anything_else>` as the path without `<relay_id>`, the original requester will get a `200` response without waiting for the destination to respond. The `<relay_id>` is just an arbitrary id that needs to be prepended in order to send a notification and log internally whats being relayed.
 
-The `<relay_id>` is just an arbitrary id that needs to be prepended in order to send a notification and log internally whats being relayed.
-
-Any path that comes after `<relay_id>` will also be relayed to the destination URl, but without the `<relay_id>` part. Headers and any json payload that gets sent from the original request, will be relayed untouched.
+Headers and any json payload that gets sent from the original request will be relayed untouched.
 
 **NOTE: The relay supports redirecting to just one destination URL, if you need to route to more destinations, it's recommended to setup multiple instances of the relay.**
 
@@ -45,7 +43,7 @@ docker-compose -f docker-compose.yaml up -d
 
 With this you can easily have the app and the api test running without more setup.
 
-## Simulating an internal service
+## Mock the Relay Destination URL
 There's also a simple app in `dst_api.py` that receives requests on any path available and responds with `200`, to use it:
 
 ```bash
