@@ -2,7 +2,7 @@ import os
 import unittest
 from unittest.mock import patch
 from flask_testing import TestCase
-from app import app
+from app import app, send_discord_notification
 
 class TestWebhook(TestCase):
   def create_app(self):
@@ -43,21 +43,16 @@ class TestWebhook(TestCase):
     response = self.client.get('/status')
     self.assertEqual(response.status_code, 200)
 
-  @patch('app.send_discord_notification')
   @patch('app.requests.post')
-  def test_discord_notification_sent(self, mock_post, mock_send_discord_notification):
-    os.environ['RELAY_DST_URL'] = 'http://localhost'
-    os.environ['DISCORD_WEBHOOK_URL'] = 'http://discordwebhook'
+  def test_discord_notification_sent(self, mock_post):
+    os.environ['DISCORD_WEBHOOK_URL'] = 'http://discordwebhookurl'
 
-    # Mock a successful response for the Discord webhook
-    mock_post.return_value.status_code = 204
+    # Call the function to send a Discord notification
+    send_discord_notification("Test message")
 
-    response = self.client.post('/webhooks/test', json={})
-    self.assertEqual(response.status_code, 200)
-    self.assertEqual(response.json, {'success': True})
-
-    # Check if the Discord notification was sent
-    mock_send_discord_notification.assert_called_once()
+    expected_payload = {"content": "Test message"}
+    mock_post.assert_called_once()
+    mock_post.assert_called_with('http://discordwebhookurl', json=expected_payload)
 
 if __name__ == '__main__':
     unittest.main()
