@@ -63,7 +63,9 @@ class TestWebhook(TestCase):
     relay_id = '123'
     subpath = 'path/to/resource'
     self.client.post(f'/webhooks/{relay_id}/{subpath}')
-    mock_send_notification.assert_called_once_with(f"Failed to relay {relay_id}")
+    # The message format should match the one used in the `async_request` function
+    failure_message = f"Failed to relay {relay_id}"
+    mock_send_notification.assert_called_once_with(failure_message)
 
 if __name__ == '__main__':
     unittest.main()
