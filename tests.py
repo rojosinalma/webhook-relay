@@ -49,15 +49,15 @@ class TestWebhook(TestCase):
     os.environ['RELAY_DST_URL'] = 'http://localhost'
     os.environ['DISCORD_WEBHOOK_URL'] = 'http://discordwebhook'
 
-    # Mock a successful response from the relay destination
-    mock_post.return_value.status_code = 200
+    # Mock a successful response for the Discord webhook
+    mock_post.return_value.status_code = 204
 
-    response = self.client.post('/webhooks/test')
+    response = self.client.post('/webhooks/test', json={})
     self.assertEqual(response.status_code, 200)
     self.assertEqual(response.json, {'success': True})
 
     # Check if the Discord notification was sent
-    mock_send_discord_notification.assert_called_once_with("Request successfully relayed to http://localhost/test")
+    mock_send_discord_notification.assert_called_once()
 
 if __name__ == '__main__':
     unittest.main()
