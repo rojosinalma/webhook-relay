@@ -37,7 +37,7 @@ def async_request(relay_id, relay_url, headers, data):
 
   except requests.exceptions.RequestException as e:
     logging.error(f"Failed to make a request to {relay_url}: {e}")
-    send_discord_notification(f"Failed to relay {relay_id}")
+    send_discord_notification(f"Failed to relay {relay_id}: {e}")
   except Exception as e:
     logging.error(f"An error occurred in async_request: {e}")
 

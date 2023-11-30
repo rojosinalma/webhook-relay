@@ -8,11 +8,11 @@ Simple python flask app to relay webhooks calls asynchronously to backend servic
 
 ## Usage
 
-The app receives requests at the path `/<relay_id>/_anything_else_`, anything received in this path will be relayed asynchronously to the  `RELAY_DST_URL`, the original requester will get a `200` response without waiting for the destination to respond.
+The app receives requests at the path `/<relay_id>/<anything_else>`, anything received in this path will be relayed asynchronously to the `RELAY_DST_URL` appending `<anything_else>` as the path, the original requester will get a `200` response without waiting for the destination to respond.
 
-The path `<relay_id>` is just an arbitrary id that needs to be prepended in order to send a notification and log internally whats being relayed.
+The `<relay_id>` is just an arbitrary id that needs to be prepended in order to send a notification and log internally whats being relayed.
 
-Any path that comes after `/<relay_id>` will also be relayed to the destination URl, but without the `/<relay_id>` part. The same is true for the headers and any json payload that gets sent from the original request.
+Any path that comes after `<relay_id>` will also be relayed to the destination URl, but without the `<relay_id>` part. Headers and any json payload that gets sent from the original request, will be relayed untouched.
 
 **NOTE: The relay supports redirecting to just one destination URL, if you need to route to more destinations, it's recommended to setup multiple instances of the relay.**
 
