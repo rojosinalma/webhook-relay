@@ -13,11 +13,25 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning) # Disable in
 
 app = Flask(__name__)
 
+def send_discord_notification(message):
+    discord_webhook_url = os.environ.get("DISCORD_WEBHOOK_URL")
+    if discord_webhook_url is None:
+        logging.error("DISCORD_WEBHOOK_URL environment variable is not set")
+        return
+
+    payload  = { "content": message }
+    response = requests.post(discord_webhook_url, json=payload)
+    logging.info("Discord notification sent successfully")
+
 def async_request(url, headers, data):
   try:
     res = requests.post(url, headers=headers, json=data, verify=False)
     res.raise_for_status()  # Raise an exception if the request was not successful (status code >= 400)
     logging.info(f"Successfully relayed request to {url}")
+
+    message = "Request successfully relayed to " + url
+    send_discord_notification(message)
+
   except requests.exceptions.RequestException as e:
     logging.error(f"Failed to make a request to {url}: {e}")
   except Exception as e:
