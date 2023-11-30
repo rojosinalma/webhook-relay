@@ -16,34 +16,38 @@ app = Flask(__name__)
 def send_discord_notification(message):
     discord_webhook_url = os.environ.get("DISCORD_WEBHOOK_URL")
     if discord_webhook_url is None:
-        logging.error("DISCORD_WEBHOOK_URL environment variable is not set")
-        return
+      logging.error("DISCORD_WEBHOOK_URL environment variable is not set, skipping notification")
+      return
 
-    payload  = { "content": message }
-    response = requests.post(discord_webhook_url, json=payload)
-    logging.info("Discord notification sent successfully")
+    try:
+      payload = { "content": message }
+      requests.post(discord_webhook_url, json=payload)
+      logging.info("Discord notification sent successfully")
+    except requests.exceptions.RequestException as e:
+      logging.error(f"Failed to send Discord notification: {e}")
 
-def async_request(url, headers, data):
+def async_request(relay_id, relay_url, headers, data):
   try:
-    res = requests.post(url, headers=headers, json=data, verify=False)
+    res = requests.post(relay_url, headers=headers, json=data, verify=False)
     res.raise_for_status()  # Raise an exception if the request was not successful (status code >= 400)
-    logging.info(f"Successfully relayed request to {url}")
 
-    message = "Request successfully relayed to " + url
-    send_discord_notification(message)
+    # Log and notify
+    logging.info(f"Successfully relayed request to {relay_url}")
+    send_discord_notification(f"Successfully relayed {relay_id}")
 
   except requests.exceptions.RequestException as e:
-    logging.error(f"Failed to make a request to {url}: {e}")
+    logging.error(f"Failed to make a request to {relay_url}: {e}")
+    send_discord_notification(f"Failed to relay {relay_id}")
   except Exception as e:
     logging.error(f"An error occurred in async_request: {e}")
 
-@app.route('/webhooks/<path:subpath>', methods=['POST'])
-def webhook(subpath):
+@app.route('/webhooks/<relay_id>/<path:subpath>', methods=['POST'])
+def webhook(relay_id, subpath):
   try:
-    dst_url = os.environ.get("RELAY_DST_URL")
-    headers = request.headers
-    url     = f"{dst_url}/{subpath}"
-    data    = '{}'
+    dst_url   = os.environ.get("RELAY_DST_URL")
+    headers   = request.headers
+    relay_url = f"{dst_url}/{subpath}"
+    data      = '{}'
 
     if not dst_url:
       raise ValueError("RELAY_DST_URL environment variable is not set")
@@ -51,7 +55,7 @@ def webhook(subpath):
     if 'Content-Type' in headers:
       data = request.get_json() # We skip if there's no content type because otherwise flask complains
 
-    thread  = threading.Thread(target=async_request, args=(url, headers, data))
+    thread  = threading.Thread(target=async_request, args=(relay_id, relay_url, headers, data))
     thread.start()
 
     return jsonify(success=True), 200

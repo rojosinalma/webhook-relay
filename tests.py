@@ -1,5 +1,6 @@
 import os
 import unittest
+import requests
 from unittest.mock import patch
 from flask_testing import TestCase
 from app import app, send_discord_notification
@@ -15,7 +16,7 @@ class TestWebhook(TestCase):
     if 'RELAY_DST_URL' in os.environ:
       del os.environ['RELAY_DST_URL']
 
-    response = self.client.post('/webhooks/test')
+    response = self.client.post('/webhooks/id/test')
     self.assertEqual(response.status_code, 500)
     self.assertEqual(response.json, {'success': False})
     mock_thread.assert_not_called()
@@ -24,7 +25,7 @@ class TestWebhook(TestCase):
   @patch('app.threading.Thread')
   def test_webhook_with_dst_url(self, mock_thread):
     os.environ['RELAY_DST_URL'] = 'http://localhost'
-    response = self.client.post('/webhooks/test')
+    response = self.client.post('/webhooks/id/test')
     self.assertEqual(response.status_code, 200)
     self.assertEqual(response.json, {'success': True})
     mock_thread.assert_called_once()
@@ -34,7 +35,7 @@ class TestWebhook(TestCase):
   def test_webhook_exception(self, mock_log, mock_thread):
     os.environ['RELAY_DST_URL'] = 'http://localhost'
     mock_thread.side_effect = Exception('Test exception')
-    response = self.client.post('/webhooks/test')
+    response = self.client.post('/webhooks/id/test')
     self.assertEqual(response.status_code, 500)
     self.assertEqual(response.json, {'success': False})
     mock_log.assert_called_once_with('An error occurred in the main thread: Test exception')
@@ -53,6 +54,16 @@ class TestWebhook(TestCase):
     expected_payload = {"content": "Test message"}
     mock_post.assert_called_once()
     mock_post.assert_called_with('http://discordwebhookurl', json=expected_payload)
+
+  @patch('app.requests.post', side_effect=requests.exceptions.RequestException)
+  @patch('app.send_discord_notification')
+  def test_discord_notification_on_failure(self, mock_send_notification, mock_post):
+    os.environ['RELAY_DST_URL'] = 'http://localhost'
+    os.environ['DISCORD_WEBHOOK_URL'] = 'http://discordwebhookurl'
+    relay_id = '123'
+    subpath = 'path/to/resource'
+    self.client.post(f'/webhooks/{relay_id}/{subpath}')
+    mock_send_notification.assert_called_once_with(f"Failed to relay {relay_id}")
 
 if __name__ == '__main__':
     unittest.main()
