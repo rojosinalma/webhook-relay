@@ -8,7 +8,7 @@ Simple app to relay any incoming requests asynchronously to a destination of you
 
 ## Description
 
-The app receives requests at the path `/<relay_id>/<anything_else>` and relays asynchronously to `RELAY_DST_URL` appending `<anything_else>` as the path without `<relay_id>`. The original requester will get a `200` response without waiting for the destination to respond.
+The app receives requests at the path `/<relay_id>/<anything_else>` and relays asynchronously to `RELAY_DST_URL` using `<anything_else>` as the url path (without `<relay_id>`). The original requester will get a `200` response without waiting for the destination to respond.
 
 `<relay_id>` is just an arbitrary id that needs to be prepended in order to send a notification and log internally whats being relayed.
 
