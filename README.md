@@ -5,6 +5,7 @@ Simple app to relay any incoming requests asynchronously to a destination of you
 
 ## Dependencies:
 * Python3
+* Pipenv
 
 ## Description
 
@@ -23,9 +24,9 @@ Headers and any json payload that gets sent from the original request will be re
 
 2. Run the relay
     ```bash
-    pip install -r requirements.txt
-    python relay.py # For local usage
-    gunicorn -c gunicorn_config.py app:app # For production usage
+    pipenv install
+    python src/app.py # For local usage
+    gunicorn -c config/gunicorn_config.py app:app # For production usage
     ```
 
 ## Running with Docker
@@ -39,25 +40,18 @@ docker run -it webhook-relay:latest
 Or with `docker-compose`
 
 ```bash
-docker-compose -f docker-compose.yaml build
-docker-compose -f docker-compose.yaml up -d
+docker-compose build webhook-relay
+docker-compose up -d
 ```
 
 With this you can easily have the app and the api test running without more setup.
 
 ## Mock the Relay Destination URL
-There's also a simple app in `dst_api.py` that receives requests on any path available and responds with `200`, to use it:
+There's also a simple app in `examples/dst_api.py` that receives requests on any path available and responds with `200`, to use it:
 
 ```bash
-python dst_api.py
+python examples/dst_api.py
 ```
 
 This will give you a place to test the relay of webhooks, you can set the `RELAY_DST_URL` in your .env to localhost:50001. You can set a different port in the `dst_api.py` script.
 If you're using `docker-compose` this has already been configured.
-
-## Development
-
-1. Fork it
-2. Change it
-3. Make a PR
-4. Ping me!

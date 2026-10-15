@@ -10,9 +10,9 @@ services:
       - RELAY_PORT=50000
       - RELAY_DST_URL=http://webhook-relay-test:50001
 
-  webhook-relay-test:
-    container_name: webhook_relay_test
-    build: .
-    command: gunicorn --access-logfile - -w 1 -b 0.0.0.0:50001 dst_api:app
-    ports:
-      - '50001:50001'
+  # webhook-relay-test:
+  #   container_name: webhook_relay_test
+  #   build: .
+  #   command: gunicorn --access-logfile - -w 1 -b 0.0.0.0:50001 dst_api:app
+  #   ports:
+  #     - '50001:50001'

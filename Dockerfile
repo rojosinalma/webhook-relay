@@ -1,9 +1,11 @@
 FROM python:3.12
 
+RUN pip install pipenv
+
 WORKDIR /app
 
-COPY app.py gunicorn_config.py requirements.txt dst_api.py ./
+COPY src/ config/ Pipfile Pipfile.lock ./
 
-RUN pip install -r requirements.txt
+RUN pipenv install
 
-CMD ["gunicorn", "-c", "gunicorn_config.py", "app:app"]
+CMD ["pipenv", "run", "gunicorn", "-c", "gunicorn_config.py", "app:app"]

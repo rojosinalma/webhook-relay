@@ -1,9 +1,9 @@
 import os
+import sys
 import unittest
-import requests
 from unittest.mock import patch
 from flask_testing import TestCase
-from app import app, send_discord_notification
+from ..src.app import *
 
 class TestWebhook(TestCase):
   def create_app(self):
